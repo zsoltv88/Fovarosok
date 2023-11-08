@@ -1,3 +1,4 @@
+
 const orszagok = {
     "Magyarország": "Budapest",
     "Németország": "Berlin",
@@ -11,17 +12,50 @@ const orszagok = {
     "Egyesült Királyság": "London"
 };
 
-const kerdes = document.getElementById("kerdes");
-const answer = document.getElementById("answer");
-const ellenoriz = document.getElementById("ellenoriz");
-const valasz = document.getElementById("valasz");
-const pont = document.getElementById("eredmeny");
+const questionElement = document.getElementById("kerdes");
+const answerInput = document.getElementById("answer");
+const checkButton = document.getElementById("ellenoriz");
+const resultElement = document.getElementById("valasz");
+const scoreElement = document.getElementById("eredmeny");
 
-let orszag = 0;
-let valasz = 0;
-let pont = 0;
-let kerdesek = 0;
+let currentCountry, correctAnswer, score = 0, totalQuestions = 0;
 
-function kerdesKiir() {
-
+function getRandomCountry() {
+    const countryKeys = Object.keys(orszagok);
+    const randomIndex = Math.floor(Math.random() * countryKeys.length);
+    return countryKeys[randomIndex];
 }
+
+function displayQuestion() {
+    currentCountry = getRandomCountry();
+    correctAnswer = orszagok[currentCountry];
+
+    questionElement.textContent = `Mi a(z) ${currentCountry} fővárosa?`;
+}
+
+function checkAnswer() {
+    const userAnswer = answerInput.value.trim().toLowerCase();
+
+    if (userAnswer === correctAnswer.toLowerCase()) {
+    resultElement.textContent = "Helyes!";
+    score++;
+    } else {
+    resultElement.textContent = `Nem jó! A helyes válasz: ${correctAnswer}`;
+    }
+
+    totalQuestions++;
+    scoreElement.textContent = `${score}/${totalQuestions}`;
+
+    answerInput.value = "";
+    displayQuestion();
+}
+
+displayQuestion();
+
+checkButton.addEventListener("click", checkAnswer);
+
+answerInput.addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+    checkAnswer();
+    }
+});
